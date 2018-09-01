@@ -72,6 +72,14 @@ if [ ! -z $PDNS_API_KEY ]; then
   sed -i "s|PDNS_API_KEY = 'you never know'|PDNS_API_KEY = '${PDNS_API_KEY}'|g" /app/config.py
 fi
 
+if [ ! -z $PDNS_VERSION ]; then
+  sed -i "s|PDNS_VERSION = '4.0.4'|PDNS_VERSION = '${PDNS_VERSION}'|g" /app/config.py
+fi
+
+if [ ! -z $RECORDS_ALLOW_EDIT ]; then
+  sed -i "s|RECORDS_ALLOW_EDIT = \['A', 'AAAA', 'CNAME', 'SPF', 'PTR', 'MX', 'TXT'\]|RECORDS_ALLOW_EDIT = ${RECORDS_ALLOW_EDIT}|g" /app/config.py
+fi
+
 . /app/flask/bin/activate
 
 if [ "${RUNDBCONFIG}"="yes" ]; then
