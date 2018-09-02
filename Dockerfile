@@ -1,6 +1,7 @@
-\FROM alpine:3.5
+FROM alpine:3.8
 
 MAINTAINER Derek Vance
+
 
 RUN apk --no-cache -q --no-progress add \
     git \
