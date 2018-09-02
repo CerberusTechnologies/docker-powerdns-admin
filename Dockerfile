@@ -40,6 +40,7 @@ RUN virtualenv flask \
 RUN cp configs/development.py config.py
 
 COPY docker-entrypoint.sh /app/
+RUN chmod +x /app/docker-entrypoint.sh
 
 
 EXPOSE 9191
