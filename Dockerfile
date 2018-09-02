@@ -47,8 +47,7 @@ RUN mkdir logs \
     && rm -rf docker
 
 
-EXPOSE 9191
+EXPOSE 9191/tcp
 
-# ENTRYPOINT ["/app/docker-entrypoint.sh"]
-# CMD ["/app/flask/bin/gunicorn", "-t", "120", "--workers", "4", "--bind", "'0.0.0.0:9191'", "--log-level", "info", "app:app"]
-CMD /bin/sh
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
+CMD ["/app/flask/bin/gunicorn", "-t", "120", "--workers", "4", "--bind", "'0.0.0.0:9191'", "--log-level", "info", "app:app"]
