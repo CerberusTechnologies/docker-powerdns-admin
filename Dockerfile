@@ -13,8 +13,8 @@ ENV PDA_DB_NAME powerdns
 
 RUN apk --no-cache -q --no-progress add \
     git \
-    python \
-    python-dev \
+    python3 \
+    python3-dev \
     py-pip \
     libffi-dev \
     libxml2-dev \
@@ -32,7 +32,7 @@ RUN pip --quiet install -U pip \
 RUN git clone https://github.com/ngoduykhanh/PowerDNS-Admin.git /app
 WORKDIR /app
 
-RUN virtualenv flask \
+RUN virtualenv -p python3 flask \
     && source ./flask/bin/activate \
     && pip install mysqlclient \
     && pip install -r requirements.txt
@@ -43,6 +43,8 @@ RUN cp configs/development.py config.py \
 
 COPY docker-entrypoint.sh /app/
 RUN chmod +x /app/docker-entrypoint.sh
+RUN mkdir logs \
+    && rm -rf docker
 
 
 EXPOSE 9191
