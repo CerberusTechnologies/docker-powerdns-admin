@@ -1,48 +1,26 @@
-#!/usr/bin/env sh
-set -eo pipefail
+#!/bin/bash
 
-RUNDBCONFIG='no'
+set -o nounset
+set -o errexit
+set -o pipefail
 
-if [ ! -z $SECRET_KEY ]; then
-  sed -i "s|SECRET_KEY = 'We are the world'|SECRET_KEY = '${SECRET_KEY}'|g" /app/config.py
+DB_MIGRATION_DIR='/app/migrations'
+
+if [ ! -d "${DB_MIGRATION_DIR}" ]; then
+  /app/flask/bin/flask db init --directory ${DB_MIGRATION_DIR}
+  /app/flask/bin/flask db migrate -m "Init DB" --directory ${DB_MIGRATION_DIR}
+  /app/flask/bin/flask db upgrade --directory ${DB_MIGRATION_DIR}
+  ./init_data.py
+
+else
+  set +e
+  /app/flask/bin/flask db migrate -m "Upgrade DB Schema" --directory ${DB_MIGRATION_DIR}
+  /app/flask/bin/flask db upgrade --directory ${DB_MIGRATION_DIR}
+  set -e
 fi
+chown -R www-data:www-data /powerdns-admin/app/static
+chown -R www-data:www-data /powerdns-admin/node_modules
+su -s /bin/bash -c 'yarn install --pure-lockfile' www-data
 
-if [ ! -z $PORT ]; then
-  sed -i "s|PORT = 9191|PORT = ${PORT}|g" /app/config.py
-fi
-
-if [ ! -z $BIND_ADDRESS ]; then
-  sed -i "s|BIND_ADDRESS = '127.0.0.1'|BIND_ADDRESS = '${BIND_ADDRESS}'|g" /app/config.py
-fi
-
-if [ ! -z $SQLA_DB_USER ]; then
-  sed -i "s|SQLA_DB_USER = 'powerdnsadmin'|SQLA_DB_USER = '${SQLA_DB_USER}'|g" /app/config.py
-  RUNDBCONFIG='yes'
-fi
-
-if [ ! -z $SQLA_DB_PASSWORD ]; then
-  sed -i "s|SQLA_DB_PASSWORD = 'powerdnsadminpassword'|SQLA_DB_PASSWORD = '${SQLA_DB_PASSWORD}'|g" /app/config.py
-  RUNDBCONFIG='yes'
-fi
-
-if [ ! -z $SQLA_DB_HOST ]; then
-  sed -i "s|SQLA_DB_HOST = 'mysqlhostorip'|SQLA_DB_HOST = '${SQLA_DB_HOST}'|g" /app/config.py
-  RUNDBCONFIG='yes'
-fi
-
-if [ ! -z $SQLA_DB_NAME ]; then
-  sed -i "s|SQLA_DB_NAME = 'powerdnsadmin'|SQLA_DB_NAME = '${SQLA_DB_NAME}'|g" /app/config.py
-  RUNDBCONFIG='yes'
-fi
-
-if [ ! -z $LDAP_TYPE ]; then
-  sed -i "s|LDAP_TYPE = 'ldap'|LDAP_TYPE = '${LDAP_TYPE}'|g" /app/config.py
-fi
-
-. /app/flask/bin/activate
-
-if [ "${RUNDBCONFIG}"="yes" ]; then
-  python /app/create_db.py
-fi
-
-python /app/run.py
+chown -R www-data:www-data /powerdns-admin/logs
+su -s /bin/bash -c '/app/flask/bin/flask assets build' www-data
