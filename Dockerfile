@@ -23,7 +23,8 @@ RUN apk --no-cache -q --no-progress add \
     zlib-dev \
     openldap-dev \
     build-base \
-    mariadb-dev
+    mariadb-dev \
+    yarn
 
 RUN pip --quiet install -U pip \
     && pip install virtualenv
@@ -38,10 +39,10 @@ RUN virtualenv flask \
 
 RUN cp configs/development.py config.py
 
-COPY docker-entrypoint.sh /
+COPY docker-entrypoint.sh /app/
 
 
 EXPOSE 9191
 
-ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 CMD ["/app/flask/bin/gunicorn", "-t", "120", "--workers", "4", "--bind", "'0.0.0.0:9191'", "--log-level", "info", "app:app"]
