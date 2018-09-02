@@ -40,6 +40,6 @@ RUN ln -s usr/local/bin/docker-entrypoint.sh /
 
 
 
-EXPOSE 9393
+EXPOSE 9191
 
 ENTRYPOINT ["docker-entrypoint.sh"]
