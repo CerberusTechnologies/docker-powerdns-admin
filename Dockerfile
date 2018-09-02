@@ -47,5 +47,6 @@ RUN chmod +x /app/docker-entrypoint.sh
 
 EXPOSE 9191
 
-ENTRYPOINT ["/app/docker-entrypoint.sh"]
-CMD ["/app/flask/bin/gunicorn", "-t", "120", "--workers", "4", "--bind", "'0.0.0.0:9191'", "--log-level", "info", "app:app"]
+# ENTRYPOINT ["/app/docker-entrypoint.sh"]
+# CMD ["/app/flask/bin/gunicorn", "-t", "120", "--workers", "4", "--bind", "'0.0.0.0:9191'", "--log-level", "info", "app:app"]
+CMD /bin/sh
