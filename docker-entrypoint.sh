@@ -1,8 +1,4 @@
-#!/bin/bash
-
-set -o nounset
-set -o errexit
-set -o pipefail
+#!/bin/sh
 
 DB_MIGRATION_DIR='/app/migrations'
 
