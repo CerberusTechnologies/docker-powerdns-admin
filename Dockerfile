@@ -37,7 +37,9 @@ RUN virtualenv flask \
     && pip install mysqlclient \
     && pip install -r requirements.txt
 
-RUN cp configs/development.py config.py
+RUN cp configs/development.py config.py \
+    && sed -i "s|LOG_LEVEL = 'DEBUG'|LOG_LEVEL = 'INFO'|g" /app/config.py; \
+    sed -i "s|LOG_FILE = 'logfile.log'|LOG_FILE = ''|g" /app/config.py;
 
 COPY docker-entrypoint.sh /app/
 RUN chmod +x /app/docker-entrypoint.sh
