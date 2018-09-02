@@ -18,9 +18,8 @@ else
   /app/flask/bin/flask db upgrade --directory ${DB_MIGRATION_DIR}
   set -e
 fi
-chown -R www-data:www-data /powerdns-admin/app/static
-chown -R www-data:www-data /powerdns-admin/node_modules
-su -s /bin/bash -c 'yarn install --pure-lockfile' www-data
+yarn install --pure-lockfile
+/app/flask/bin/flask assets build
 
-chown -R www-data:www-data /powerdns-admin/logs
-su -s /bin/bash -c '/app/flask/bin/flask assets build' www-data
+
+exec "$@"
