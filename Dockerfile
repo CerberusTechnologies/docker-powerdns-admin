@@ -10,6 +10,9 @@ RUN apk update && \
     python-dev \
     py-pip \
     libffi-dev \
+    libxml2-dev \
+    libxslt1-dev \
+    zlib1g-dev \
     openldap-dev \
     build-base \
     mariadb-dev && \
