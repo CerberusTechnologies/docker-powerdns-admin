@@ -77,7 +77,7 @@ if [ ! -z $PDNS_VERSION ]; then
 fi
 
 if [ ! -z $RECORDS_ALLOW_EDIT ]; then
-  sed -i "s|RECORDS_ALLOW_EDIT = \['A', 'AAAA', 'CNAME', 'SPF', 'PTR', 'MX', 'TXT'\]|RECORDS_ALLOW_EDIT = ${RECORDS_ALLOW_EDIT}|g" /app/config.py
+  sed -i "s|RECORDS_ALLOW_EDIT = \[.*\]|RECORDS_ALLOW_EDIT = [\${RECORDS_ALLOW_EDIT}\]|g" /app/config.py
 fi
 
 . /app/flask/bin/activate
